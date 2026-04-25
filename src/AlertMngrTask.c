@@ -12,6 +12,7 @@ int AlertManager(QueueHandle_t alertQue, QueueHandle_t zoneQue){
     int level; 
     int current_level = 0;
     int id;
+    //traks when we should kill the buzzer
     int hazardless_count = 0;
     while (1)
     {

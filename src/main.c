@@ -1,7 +1,13 @@
 #include <stdio.h>
+#include <stdbool.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/queue.h"
+#include "freertos/semphr.h"
+
 #include "esp_log.h"
+#include "esp_err.h"
 
 #include "pins.h"
 #include "rgb_led.h"
@@ -11,6 +17,7 @@
 #include "button.h"
 #include "dht.h"
 #include "lcd_i2c.h"
+#include "structs.h"
 
 static const char *TAG = "GROUP5";
 
@@ -35,6 +42,11 @@ static void init_lcd(void) {
         ESP_LOGI(TAG, "LCD initialized");
     }
 }
+
+ZoneStatus_t zones[3];
+SemaphoreHandle_t xZoneMutex;
+QueueHandle_t xAlertQueue;
+
 
 void app_main(void) {
     ESP_LOGI(TAG, "Initializing peripherals...");
