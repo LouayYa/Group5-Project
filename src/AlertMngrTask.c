@@ -71,5 +71,5 @@ int AlertManager(QueueHandle_t alertQue, QueueHandle_t zoneQue){
         }
     }
     
-    return 0
+    return 0;
 }
