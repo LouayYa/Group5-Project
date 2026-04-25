@@ -18,10 +18,14 @@
 #include "dht.h"
 #include "lcd_i2c.h"
 #include "structs.h"
+#include "SensorTask.h"
+#include "AlertMngrTask.h"
+#include "vDisplayTask.h"
 
 static const char *TAG = "GROUP5";
 
-static lcd_i2c_t lcd;
+lcd_i2c_t lcd;
+volatile system_state_t system_state = SYS_NORMAL;
 
 static void init_lcd(void) {
     lcd_i2c_config_t cfg = {
@@ -61,14 +65,26 @@ void app_main(void) {
 
     ESP_LOGI(TAG, "All peripherals initialized");
 
+    xZoneMutex = xSemaphoreCreateMutex();
+    xAlertQueue = xQueueCreate(10, sizeof(AlertMsg_t));
+
+    for (int i = 0; i < 3; i++) {
+        zones[i].zone_id = i + 1;
+        zones[i].temperature = 0.0f;
+        zones[i].humidity = 0.0f;
+        zones[i].gas = 0;
+        zones[i].level = ZONE_NORMAL;
+    }
+
+    static int zone_ids[3] = {1, 2, 3};
+    xTaskCreate(vZoneSensorTask, "SensorTask_Z1", 4096, &zone_ids[0], 2, NULL);
+    xTaskCreate(vZoneSensorTask, "SensorTask_Z2", 4096, &zone_ids[1], 2, NULL);
+    xTaskCreate(vZoneSensorTask, "SensorTask_Z3", 4096, &zone_ids[2], 2, NULL);
+    xTaskCreate(vAlertMngrTask,  "AlertMngrTask", 4096, NULL,  3, NULL);
+    xTaskCreate(vDisplayTask,    "DisplayTask",   4096, &lcd, 1, NULL);
+
+    // Keep app_main alive
     while (1) {
-        int pot1 = potentiometer_read(1);
-        int pot2 = potentiometer_read(2);
-        int pot3 = potentiometer_read(3);
-        bool btn = button_is_pressed();
-
-        ESP_LOGI(TAG, "POT1=%d POT2=%d POT3=%d BTN=%d", pot1, pot2, pot3, btn);
-
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(10000));
     }
 }

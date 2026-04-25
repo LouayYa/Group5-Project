@@ -35,7 +35,7 @@ void servo_init(void) {
 
 void servo_set_angle(uint32_t angle_deg) {
     if (angle_deg > 180) angle_deg = 180;
-    uint32_t pulse_us = 500 + (angle_deg * 2000 / 180);
+    uint32_t pulse_us = 500 + (angle_deg * 1900 / 180);
     uint32_t duty = pulse_to_duty(pulse_us);
     ledc_set_duty(LEDC_HIGH_SPEED_MODE, SERVO_CHANNEL, duty);
     ledc_update_duty(LEDC_HIGH_SPEED_MODE, SERVO_CHANNEL);
