@@ -12,6 +12,27 @@ static void rgb_set(ledc_channel_t r_ch, ledc_channel_t g_ch, ledc_channel_t b_c
     ledc_update_duty(mode, b_ch);
 }
 
+void rgb1_set(uint8_t r, uint8_t g, uint8_t b) {
+    rgb_set(RGB1_R_CHANNEL, RGB1_G_CHANNEL, RGB1_B_CHANNEL,
+            LEDC_LOW_SPEED_MODE, r, g, b);
+}
+
+void rgb2_set(uint8_t r, uint8_t g, uint8_t b) {
+    rgb_set(RGB2_R_CHANNEL, RGB2_G_CHANNEL, RGB2_B_CHANNEL,
+            LEDC_LOW_SPEED_MODE, r, g, b);
+}
+
+void rgb3_set(uint8_t r, uint8_t g, uint8_t b) {
+    // R and G on low-speed mode
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, RGB3_R_CHANNEL, r);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, RGB3_R_CHANNEL);
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, RGB3_G_CHANNEL, g);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, RGB3_G_CHANNEL);
+    // B on high-speed mode (separate timer, ran out of low-speed channels)
+    ledc_set_duty(LEDC_HIGH_SPEED_MODE, RGB3_B_CHANNEL, b);
+    ledc_update_duty(LEDC_HIGH_SPEED_MODE, RGB3_B_CHANNEL);
+}
+
 void rgb_led_init(void) {
     // Timer 0 (low-speed): RGB LEDs at 5 kHz, 8-bit
     ledc_timer_config_t rgb_timer = {
@@ -67,25 +88,8 @@ void rgb_led_init(void) {
         .hpoint = 0
     };
     ledc_channel_config(&rgb3b_cfg);
-}
 
-void rgb1_set(uint8_t r, uint8_t g, uint8_t b) {
-    rgb_set(RGB1_R_CHANNEL, RGB1_G_CHANNEL, RGB1_B_CHANNEL,
-            LEDC_LOW_SPEED_MODE, r, g, b);
-}
-
-void rgb2_set(uint8_t r, uint8_t g, uint8_t b) {
-    rgb_set(RGB2_R_CHANNEL, RGB2_G_CHANNEL, RGB2_B_CHANNEL,
-            LEDC_LOW_SPEED_MODE, r, g, b);
-}
-
-void rgb3_set(uint8_t r, uint8_t g, uint8_t b) {
-    // R and G on low-speed mode
-    ledc_set_duty(LEDC_LOW_SPEED_MODE, RGB3_R_CHANNEL, r);
-    ledc_update_duty(LEDC_LOW_SPEED_MODE, RGB3_R_CHANNEL);
-    ledc_set_duty(LEDC_LOW_SPEED_MODE, RGB3_G_CHANNEL, g);
-    ledc_update_duty(LEDC_LOW_SPEED_MODE, RGB3_G_CHANNEL);
-    // B on high-speed mode (separate timer, ran out of low-speed channels)
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, RGB3_B_CHANNEL, b);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, RGB3_B_CHANNEL);
+    rgb1_set(0,100,0);
+    rgb2_set(0,100,0);
+    rgb3_set(0,100,0);
 }

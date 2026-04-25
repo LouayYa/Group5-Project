@@ -21,6 +21,7 @@
 #include "SensorTask.h"
 #include "AlertMngrTask.h"
 #include "vDisplayTask.h"
+#include "ButtonTask.h"
 
 static const char *TAG = "GROUP5";
 
@@ -49,6 +50,7 @@ static void init_lcd(void) {
 
 ZoneStatus_t zones[3];
 SemaphoreHandle_t xZoneMutex;
+SemaphoreHandle_t xServiceMutex;
 QueueHandle_t xAlertQueue;
 
 
@@ -66,6 +68,7 @@ void app_main(void) {
     ESP_LOGI(TAG, "All peripherals initialized");
 
     xZoneMutex = xSemaphoreCreateMutex();
+    xServiceMutex = xSemaphoreCreateMutex();
     xAlertQueue = xQueueCreate(10, sizeof(AlertMsg_t));
 
     for (int i = 0; i < 3; i++) {
@@ -82,6 +85,7 @@ void app_main(void) {
     xTaskCreate(vZoneSensorTask, "SensorTask_Z3", 4096, &zone_ids[2], 2, NULL);
     xTaskCreate(vAlertMngrTask,  "AlertMngrTask", 4096, NULL,  3, NULL);
     xTaskCreate(vDisplayTask,    "DisplayTask",   4096, &lcd, 1, NULL);
+    xTaskCreate(vButtonTask, "ButtonTask", 4096, NULL, 4, NULL);
 
     // Keep app_main alive
     while (1) {

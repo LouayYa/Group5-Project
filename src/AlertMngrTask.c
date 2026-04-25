@@ -11,6 +11,7 @@
 static const char *TAG = "AlertMngr";
 
 extern QueueHandle_t xAlertQueue;
+extern SemaphoreHandle_t xServiceMutex;
 
 static void set_zone_led(int zone_id, zone_level_t level) {
     int r = 0, g = 0;
@@ -39,31 +40,36 @@ void vAlertMngrTask(void *pvParameters) {
 
         zone_levels[idx] = lvl;
         set_zone_led(msg.zone_id, lvl);
-
-        // Find the highest active level across all zones
         zone_level_t worst       = ZONE_NORMAL;
         int          worst_zone  = -1;
-        for (int i = 0; i < 3; i++) {
-            if (zone_levels[i] > worst) {
-                worst      = zone_levels[i];
-                worst_zone = i + 1;
+        
+        if(xSemaphoreTake(xServiceMutex, portMAX_DELAY) == pdTRUE){
+            // Find the highest active level across all zones
+            
+            for (int i = 0; i < 3; i++) {
+                if (zone_levels[i] > worst) {
+                    worst      = zone_levels[i];
+                    worst_zone = i + 1;
+                }
             }
-        }
 
-        if (worst == ZONE_NORMAL) {
-            // All zones clear — silence buzzer immediately
-            buzzer_off();
-            ESP_LOGI(TAG, "All zones normal — buzzer off");
-        } else {
-            // Point servo at worst zone and sound buzzer
-            buzzer_tone(262);
-            switch (worst_zone) {
-                case 1: servo_set_angle(0);   break;
-                case 2: servo_set_angle(90);  break;
-                case 3: servo_set_angle(180); break;
-                default: break;
+            if (worst == ZONE_NORMAL) {
+                // All zones clear — silence buzzer immediately
+                buzzer_off();
+                ESP_LOGI(TAG, "All zones normal — buzzer off");
+            } else {
+                // Point servo at worst zone and sound buzzer
+                buzzer_tone(262);
+                switch (worst_zone) {
+                    case 1: servo_set_angle(0);   break;
+                    case 2: servo_set_angle(90);  break;
+                    case 3: servo_set_angle(180); break;
+                    default: break;
+                }
+                ESP_LOGI(TAG, "Worst zone: %d level: %d", worst_zone, (int)worst);
             }
-            ESP_LOGI(TAG, "Worst zone: %d level: %d", worst_zone, (int)worst);
+            xSemaphoreGive(xServiceMutex);
         }
     }
+        
 }
