@@ -24,8 +24,9 @@ static int wait_for_level(gpio_num_t pin, int level, int timeout_us) {
 void dht_init(void) {
     gpio_num_t pins[] = { DHT1_PIN, DHT2_PIN, DHT3_PIN };
     for (int i = 0; i < 3; i++) {
-        gpio_set_direction(pins[i], GPIO_MODE_INPUT);
-        gpio_set_pull_mode(pins[i], GPIO_PULLUP_ONLY);
+        gpio_set_direction(pins[i], GPIO_MODE_INPUT); // set dht pins as input
+        gpio_set_pull_mode(pins[i], GPIO_PULLUP_ONLY); 
+        // enable pull-up resistors because dht pulls the signal low to communicate, so we want it to default high when idle
     }
 }
 
@@ -48,11 +49,12 @@ esp_err_t dht_read(int sensor_num, dht_reading_t *reading) {
     if (wait_for_level(pin, 1, 100) < 0) return ESP_ERR_TIMEOUT;
     if (wait_for_level(pin, 0, 100) < 0) return ESP_ERR_TIMEOUT;
 
-    // Read 40 bits
+    // Read 40 bits, 16-bit humidity + 16-bit temperature + 8-bit checksum
     for (int i = 0; i < 40; i++) {
         if (wait_for_level(pin, 1, 100) < 0) return ESP_ERR_TIMEOUT;
         int duration = wait_for_level(pin, 0, 100);
         if (duration < 0) return ESP_ERR_TIMEOUT;
+        // reads a '1' if the high signal lasted >40us, otherwise it's a '0'
         if (duration > 40) {
             data[i / 8] |= (1 << (7 - (i % 8)));
         }

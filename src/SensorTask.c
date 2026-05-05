@@ -18,9 +18,13 @@ extern SemaphoreHandle_t xZoneMutex;
 extern QueueHandle_t xAlertQueue;
 
 static zone_level_t classify_zone(float temp, float humidity, int gas) {
-    if (temp >= TEMP_CRIT_THRESHOLD || humidity >= HUM_CRIT_THRESHOLD || gas >= GAS_CRIT_THRESHOLD)
+    if (temp >= TEMP_CRIT_THRESHOLD || 
+        humidity >= HUM_CRIT_THRESHOLD || 
+        gas >= GAS_CRIT_THRESHOLD)
         return ZONE_CRITICAL;
-    if (temp >= TEMP_WARN_THRESHOLD || humidity >= HUM_WARN_THRESHOLD || gas >= GAS_WARN_THRESHOLD)
+    if (temp >= TEMP_WARN_THRESHOLD ||
+        humidity >= HUM_WARN_THRESHOLD ||
+        gas >= GAS_WARN_THRESHOLD)
         return ZONE_WARNING;
     return ZONE_NORMAL;
 }

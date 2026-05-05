@@ -3,8 +3,8 @@
 
 typedef enum {
     SYS_NORMAL = 0,
-    SYS_ALERT,
-    SYS_ACKNOWLEDGED
+    SYS_ACKNOWLEDGED = 1,
+    SYS_ALERT = 2,
 } system_state_t;
 
 typedef enum {
