@@ -17,6 +17,7 @@ extern ZoneStatus_t zones[3];
 extern SemaphoreHandle_t xZoneMutex;
 extern QueueHandle_t xAlertQueue;
 
+//function that classifies zone status based on temp, humidity, and gas readings
 static zone_level_t classify_zone(float temp, float humidity, int gas) {
     if (temp >= TEMP_CRIT_THRESHOLD || 
         humidity >= HUM_CRIT_THRESHOLD || 
@@ -68,11 +69,13 @@ void vZoneSensorTask(void *pvParameters) {
             continue;
         }
 
+        //if the level changed or is not normal, create an alert message and send it to the alert queue
         if (new_level != prev_level || new_level != ZONE_NORMAL) {
             AlertMsg_t msg = {
                 .zone_id = zone_id,
                 .level   = (int)new_level
             };
+            //send alert message to queue with a 10ms timeout
             if (xQueueSend(xAlertQueue, &msg, pdMS_TO_TICKS(10)) != pdTRUE) {
                 ESP_LOGW(TAG, "Zone %d alert queue full", zone_id);
             }
