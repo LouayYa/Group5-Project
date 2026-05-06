@@ -7,8 +7,8 @@
 
 // ── DHT22 Sensors ───────────────────────────────────────────────────
 #define DHT1_PIN        GPIO_NUM_23
-#define DHT2_PIN        GPIO_NUM_16
-#define DHT3_PIN        GPIO_NUM_17
+#define DHT2_PIN        GPIO_NUM_17
+#define DHT3_PIN        GPIO_NUM_16
 
 // ── RGB LED 1 (common cathode) ──────────────────────────────────────
 #define RGB1_R_PIN      GPIO_NUM_25

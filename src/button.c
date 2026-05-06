@@ -13,8 +13,10 @@ static void IRAM_ATTR button_isr_handler(void *arg) {
     if ((now - last_press_us) < DEBOUNCE_US) return;
     last_press_us = now;
 
+    // If button is pressed and wakes up higher priority task, it will sent woken as true.
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     xSemaphoreGiveFromISR(xButtonSemaphore, &xHigherPriorityTaskWoken);
+    // If woken is true, then immediately serve the higher priority task that was woken.
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
@@ -30,10 +32,13 @@ void button_init(void) {
     };
     gpio_config(&cfg);
 
+    // Install ISR service and add handler for button pin
+    // When button is pressed, a falling edge is detected, and the interrupt handler is called.
     gpio_install_isr_service(0);
     gpio_isr_handler_add(BUTTON_PIN, button_isr_handler, NULL);
 }
 
+// returns true if button is currently pressed (active low)
 bool button_is_pressed(void) {
     return gpio_get_level(BUTTON_PIN) == 0;
 }
