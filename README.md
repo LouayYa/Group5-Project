@@ -237,9 +237,7 @@ Add screenshots of the Wokwi simulation in different states.
 
 ### Normal State
 
-```markdown
-![Normal State](images/normal-state.png)
-```
+<img width="1420" height="787" alt="image" src="./images/normal-state.jpg" />
 
 **Description:**  
 All zones are safe. RGB LEDs show normal condition, the buzzer is off, and the LCD shows normal readings.
@@ -248,9 +246,7 @@ All zones are safe. RGB LEDs show normal condition, the buzzer is off, and the L
 
 ### Warning State
 
-```markdown
-![Warning State](images/warning-state.png)
-```
+<img width="1420" height="787" alt="image" src="./images/warning-state.jpg" />
 
 **Description:**  
 At least one zone reaches warning level. The related RGB LED changes color, and the system continues monitoring the zone.
@@ -259,9 +255,7 @@ At least one zone reaches warning level. The related RGB LED changes color, and 
 
 ### Critical State
 
-```markdown
-![Critical State](images/critical-state.png)
-```
+<img width="1420" height="787" alt="image" src="./images/critical-state.jpg" />
 
 **Description:**  
 At least one zone reaches critical level. The buzzer turns on, the RGB LED becomes red for the critical zone, and the servo motor points toward the highest-risk zone.
