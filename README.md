@@ -133,19 +133,19 @@ The button task allows manual override by moving the servo away from the current
 ### Sensor Task
 
 <p align="center">
-  <img alt="Sensor Task Flowchart" src="./images/sensortask.jpeg" width="800" />
+  <img alt="Sensor Task Flowchart" src="./images/sensortask.jpeg" width="600" />
 </p>
 
 ### Alert Manager Task
 
 <p align="center">
-  <img alt="Alert Manager Task Flowchart" src="./images/alertmanagertask.jpeg" width="800" />
+  <img alt="Alert Manager Task Flowchart" src="./images/alertmanagertask.jpeg" width="600"/>
 </p>
 
 ### Display Task
 
 <p align="center">
-  <img alt="Display Task Flowchart" src="./images/displaytask.jpeg" width="800" />
+  <img alt="Display Task Flowchart" src="./images/displaytask.jpeg"  width="600" />
 </p>
 
 ### Button Override
