@@ -126,7 +126,7 @@ The button task allows manual override by moving the servo away from the current
 
 ### System Architecture
 
-<img alt="System Architecture" src="./images/systemarchitecture.jpeg" />
+<img alt="System Architecture" src="./images/system_architecture.png" />
 
 ---
 
