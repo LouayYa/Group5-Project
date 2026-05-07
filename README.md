@@ -126,27 +126,27 @@ The button task allows manual override by moving the servo away from the current
 
 ### System Architecture
 
-<img alt="System Architecture" src="./images/system_architecture.png" />
-
----
+<p align="center">
+  <img alt="System Architecture" src="./images/system_architecture.png" width="800" />
+</p>
 
 ### Sensor Task
 
-<img alt="Sensor Task Flowchart" src="./images/sensortask.jpeg" />
-
----
+<p align="center">
+  <img alt="Sensor Task Flowchart" src="./images/sensortask.jpeg" width="800" />
+</p>
 
 ### Alert Manager Task
 
-<img alt="Alert Manager Task Flowchart" src="./images/alertmanagertask.jpeg" />
-
----
+<p align="center">
+  <img alt="Alert Manager Task Flowchart" src="./images/alertmanagertask.jpeg" width="800" />
+</p>
 
 ### Display Task
 
-<img alt="Display Task Flowchart" src="./images/displaytask.jpeg" />
-
----
+<p align="center">
+  <img alt="Display Task Flowchart" src="./images/displaytask.jpeg" width="800" />
+</p>
 
 ### Button Override
 
@@ -308,28 +308,10 @@ At least one zone reaches critical level. The buzzer turns on, the RGB LED becom
 
 ### Manual Override / Button Press
 
-<img width="1420" height="787" alt="image" src="./images/Button_Override.jpg" />
+<img width="1420" height="787" alt="image" src="./images/Button_Override.png" />
 
 **Description:**  
 When the button is pressed, the button task changes system state from ALERT to ACKNOWLEDGE. This silences the buzzor.
-
----
-
-### Alert Manager Task
-
-<img alt="Alert Manager Task" src="./images/alertmanagertask.jpeg" />
-
-**Description:**  
-The Alert Manager task receives messages from the alert queue, updates the RGB LED color for the affected zone, activates the buzzer, and moves the servo motor to point toward the highest-risk zone.
-
----
-
-### Display Task
-
-<img alt="Display Task" src="./images/displaytask.jpeg" />
-
-**Description:**  
-The Display Task reads the latest zone data through the mutex-protected shared array and updates the 16x2 I2C LCD with the current zone readings and system status.
 
 ---
 
