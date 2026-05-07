@@ -221,13 +221,7 @@ This allows the alert manager task to know which zone changed and what the new d
 
 ## System Photo
 
-This project is mainly a simulation project, so physical system photos are not required.
-
-If a physical prototype is tested later, photos can be added here:
-
-```markdown
-![System Photo](images/system-photo.jpg)
-```
+<img width="1420" height="787" alt="image" src="./images/system-photo.jpg" />
 
 ---
 
