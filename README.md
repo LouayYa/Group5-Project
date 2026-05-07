@@ -122,10 +122,60 @@ The button task allows manual override by moving the servo away from the current
 
 ---
 
-## Flowchart / State Diagram
+## Flowcharts & State Diagrams
 
-Add  task flowcharts here:
+### System Architecture
 
+<img alt="System Architecture" src="./images/systemarchitecture.jpeg" />
+
+---
+
+### Sensor Task
+
+<img alt="Sensor Task Flowchart" src="./images/sensortask.jpeg" />
+
+---
+
+### Alert Manager Task
+
+<img alt="Alert Manager Task Flowchart" src="./images/alertmanagertask.jpeg" />
+
+---
+
+### Display Task
+
+<img alt="Display Task Flowchart" src="./images/displaytask.jpeg" />
+
+---
+
+### Button Override
+
+The button ISR fires on a falling edge (GPIO 33). A 200 ms software debounce prevents false triggers. The effect of each press depends on the current system state — it either silences the buzzer or fully resets the system.
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+
+    IDLE : IDLE
+    IDLE : • Waiting for press
+    IDLE : • Pull-up HIGH
+
+    DEBOUNCING : DEBOUNCING
+    DEBOUNCING : • ISR triggered
+    DEBOUNCING : • 200ms debounce timer
+
+    PRESSED : PRESSED
+    PRESSED : • Semaphore given
+    PRESSED : • Alert Manager notified
+
+    IDLE --> DEBOUNCING : Falling edge on GPIO 33
+    DEBOUNCING --> IDLE : Bounce rejected (< 200ms)
+    DEBOUNCING --> PRESSED : Debounce passed (>= 200ms)
+
+    PRESSED --> IDLE : SYS_NORMAL — no action
+    PRESSED --> IDLE : SYS_ALERT — buzzer off, servo holds
+    PRESSED --> IDLE : SYS_ACKNOWLEDGED — full reset
+```
 
 ---
 
@@ -258,18 +308,34 @@ At least one zone reaches critical level. The buzzer turns on, the RGB LED becom
 
 ### Manual Override / Button Press
 
-```markdown
-![Button Override](images/button-override.png)
-```
+<img width="1420" height="787" alt="image" src="./images/Button_Override.jpg" />
 
 **Description:**  
-When the button is pressed, the button task takes control of the service output and moves the servo to the override position.
+When the button is pressed, the button task changes system state from ALERT to ACKNOWLEDGE. This silences the buzzor.
+
+---
+
+### Alert Manager Task
+
+<img alt="Alert Manager Task" src="./images/alertmanagertask.jpeg" />
+
+**Description:**  
+The Alert Manager task receives messages from the alert queue, updates the RGB LED color for the affected zone, activates the buzzer, and moves the servo motor to point toward the highest-risk zone.
+
+---
+
+### Display Task
+
+<img alt="Display Task" src="./images/displaytask.jpeg" />
+
+**Description:**  
+The Display Task reads the latest zone data through the mutex-protected shared array and updates the 16x2 I2C LCD with the current zone readings and system status.
 
 ---
 
 ## Video
 
-Add  video link here:
+[![Multi-Zone Environmental Hazard Monitoring System | ESP32 + FreeRTOS Demo](https://img.youtube.com/vi/jbKNFUH1YdE/maxresdefault.jpg)](https://youtu.be/jbKNFUH1YdE)
 
 
 
